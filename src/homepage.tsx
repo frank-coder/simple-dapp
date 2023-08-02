@@ -1,4 +1,3 @@
-import React from 'react';
 import { Flex, Stack } from '@chakra-ui/react';
 import Navbar from './navbar';
 import Sendcrypto from './sendBusd';

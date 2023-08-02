@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -9,14 +8,14 @@ import {
   Button,
 } from '@chakra-ui/react';
 
-export function SuccessModal({ isOpen, onClose, hash }) {
+export function SuccessModal({ isOpen, onClose, hash }: {isOpen:boolean, onClose: () => void, hash:string | undefined}) {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Success</ModalHeader>
         <ModalBody>
-          <a href={``}>You can view transaction here</a>
+          <a href={`${hash}`}>You can view transaction here</a>
         </ModalBody>
         <ModalFooter>
           <Button colorScheme="green" onClick={onClose}>
@@ -28,7 +27,7 @@ export function SuccessModal({ isOpen, onClose, hash }) {
   );
 }
 
-export function FailureModal({ isOpen, onClose }) {
+export function FailureModal({ isOpen, onClose }: {isOpen:boolean, onClose: () => void}) {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
