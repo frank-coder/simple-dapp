@@ -5,7 +5,7 @@ import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import { bsc, bscTestnet, mainnet, polygon } from 'wagmi/chains';
 import Homepage from './homepage';
 
-const chains = [bscTestnet, bsc, mainnet, polygon];
+const chains = [bsc, mainnet, polygon, bscTestnet];
 const projectId: string = (import.meta.env.VITE_PROJECT_ID);
 
 const { publicClient } = configureChains(chains, [w3mProvider({ projectId })]);
