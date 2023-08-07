@@ -52,7 +52,6 @@ export default function Sendcrypto() {
     const deBouncedAddress = useDebounce(receipient, 500);
 
 
-    
     const { config, refetch } = usePrepareContractWrite({
         address: busdMainnetContract,
         abi: busdContractAbi,
@@ -60,18 +59,26 @@ export default function Sendcrypto() {
         args: [deBouncedAddress, parseEther(deBouncedAmount)],
         enabled: false,
         account: address,
+        onError() {
+            setTimeout(onOpenFailure, 500);
+            <FailureModal isOpen={isFailureOpen} onClose={onCloseFailure} />
+            console.log("prepare error " + isFailureOpen);
+        },
     })
     const contractWrite = useContractWrite(config)
 
     useWaitForTransaction({
         hash: contractWrite.data?.hash,
+        enabled: contractWrite.isLoading,
         onSuccess() {
-            onOpenSuccess();
+            setTimeout(onOpenSuccess, 500);
             <SuccessModal isOpen={isSuccessOpen} onClose={onCloseSuccess} hash={contractWrite.data?.hash}/>
+            console.log("openSuccess " + isSuccessOpen);
         },
         onError() {
-            onOpenFailure();
+            setTimeout(onOpenFailure, 500);
             <FailureModal isOpen={isFailureOpen} onClose={onCloseFailure} />
+            console.log("openError " + isFailureOpen);
         },
     })
 
