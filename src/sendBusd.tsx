@@ -22,7 +22,7 @@ import {
     usePrepareContractWrite
  } from 'wagmi'
  import { Web3Button } from '@web3modal/react'
-import { busdContractAbi, busdTestnetContract } from './contractInfo'
+import { busdContractAbi, busdMainnetContract } from './contractInfo'
 import {SuccessModal, FailureModal} from './modals/modals'
 import { useDebounce } from 'usehooks-ts'
 import { parseEther } from 'viem'
@@ -54,7 +54,7 @@ export default function Sendcrypto() {
 
     
     const { config, refetch } = usePrepareContractWrite({
-        address: busdTestnetContract,
+        address: busdMainnetContract,
         abi: busdContractAbi,
         functionName: 'transfer',
         args: [deBouncedAddress, parseEther(deBouncedAmount)],

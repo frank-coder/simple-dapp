@@ -38,7 +38,6 @@ export default function Nav() {
 
   useAccount({
     onConnect({isReconnected}) {
-      console.log(isReconnected);
       if (!isReconnected)
         signTypedData();
     },
