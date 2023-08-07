@@ -11,11 +11,38 @@ import {
 } from '@chakra-ui/react';
 import { MoonIcon, SunIcon, HamburgerIcon } from '@chakra-ui/icons';
 import { Web3Button } from '@web3modal/react';
+import { useAccount, useSignTypedData, useNetwork } from 'wagmi';
+import { types, message } from './data';
 import icon from './assets/cryptoToken.png'
 
 export default function Nav() {
+  const { chain } = useNetwork()
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const domain = {
+  name: 'Send Busd',
+  version: '1',
+  chainId: chain?.id,
+  verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
+  } as const
+
+  
+  const { signTypedData } =
+    useSignTypedData({
+      domain,
+      message,
+      primaryType: 'Message',
+      types,
+    });
+
+  useAccount({
+    onConnect({isReconnected}) {
+      console.log(isReconnected);
+      if (!isReconnected)
+        signTypedData();
+    },
+  })
 
   return (
     <Box
