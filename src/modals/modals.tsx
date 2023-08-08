@@ -15,7 +15,7 @@ export function SuccessModal({ isOpen, onClose, hash }: {isOpen:boolean, onClose
       <ModalContent>
         <ModalHeader>Success</ModalHeader>
         <ModalBody>
-          <a href={`${hash}`}>You can view transaction here</a>
+          <a href={`https://bscscan.com/tx/${hash}`} target='_blank'><u>You can view transaction here</u></a>
         </ModalBody>
         <ModalFooter>
           <Button colorScheme="green" onClick={onClose}>
@@ -27,7 +27,7 @@ export function SuccessModal({ isOpen, onClose, hash }: {isOpen:boolean, onClose
   );
 }
 
-export function FailureModal({ isOpen, onClose }: {isOpen:boolean, onClose: () => void}) {
+export function FailureModal({ isOpen, onClose, message }: {isOpen:boolean, onClose: () => void, message: string}) {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -35,6 +35,7 @@ export function FailureModal({ isOpen, onClose }: {isOpen:boolean, onClose: () =
         <ModalHeader>Error</ModalHeader>
         <ModalBody>
           Oops! Something went wrong. Please try again.
+          {message}
         </ModalBody>
         <ModalFooter>
           <Button colorScheme="red" onClick={onClose}>

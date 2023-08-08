@@ -10,6 +10,7 @@ import {
   InputGroup,
   InputLeftElement,
   Stack,
+  Spinner,
   useColorModeValue,
   VStack,
   useDisclosure,
@@ -47,6 +48,8 @@ export default function Sendcrypto() {
     const { isOpen: isSuccessOpen, onOpen: onOpenSuccess, onClose: onCloseSuccess } = useDisclosure();
     const { isOpen: isFailureOpen, onOpen: onOpenFailure, onClose: onCloseFailure } = useDisclosure();
     const [amount, setAmount] = useState('');
+    const [successHash, setSucccessHash] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
     const [receipient, setReceipient] = useState('');
     const deBouncedAmount = useDebounce(amount, 500);
     const deBouncedAddress = useDebounce(receipient, 500);
@@ -59,26 +62,22 @@ export default function Sendcrypto() {
         args: [deBouncedAddress, parseEther(deBouncedAmount)],
         enabled: false,
         account: address,
-        onError() {
+        onError(error) {
+            setErrorMessage(String(error?.message));
             setTimeout(onOpenFailure, 500);
-            <FailureModal isOpen={isFailureOpen} onClose={onCloseFailure} />
-            console.log("prepare error " + isFailureOpen);
         },
     })
     const contractWrite = useContractWrite(config)
 
     useWaitForTransaction({
         hash: contractWrite.data?.hash,
-        enabled: contractWrite.isLoading,
-        onSuccess() {
+        onSuccess(hash) {
+            setSucccessHash(String(hash.transactionHash));
             setTimeout(onOpenSuccess, 500);
-            <SuccessModal isOpen={isSuccessOpen} onClose={onCloseSuccess} hash={contractWrite.data?.hash}/>
-            console.log("openSuccess " + isSuccessOpen);
         },
-        onError() {
+        onError(error) {
+            setErrorMessage(String(error?.message))
             setTimeout(onOpenFailure, 500);
-            <FailureModal isOpen={isFailureOpen} onClose={onCloseFailure} />
-            console.log("openError " + isFailureOpen);
         },
     })
 
@@ -94,6 +93,8 @@ export default function Sendcrypto() {
             backgroundAttachment: 'fixed',
         }}
         id="contact">
+            <SuccessModal isOpen={isSuccessOpen} onClose={onCloseSuccess} hash={successHash}/>
+            <FailureModal isOpen={isFailureOpen} onClose={onCloseFailure} message={errorMessage}/>
         <Box borderRadius="lg" m={{ base: 5, md: 16, lg: 10 }} p={{ base: 5, lg: 16 }}>
             <Box>
             <VStack spacing={{ base: 4, md: 8, lg: 20 }}>
@@ -149,7 +150,7 @@ export default function Sendcrypto() {
                         bg: 'blue.500',
                         }}
                         width="full"
-                        onClick={ () => {refetch(); contractWrite.write?.();}}>
+                        onClick={ () => {refetch(); contractWrite.write?.();}}>{ contractWrite.isLoading && <Spinner />}
                         Send crypto
                     </Button>}
                     {isDisconnected && < Web3Button />}
